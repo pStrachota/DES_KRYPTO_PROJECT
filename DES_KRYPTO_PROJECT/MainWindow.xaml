@@ -50,5 +50,38 @@
                 <TextBox Visibility="Hidden" Name="TxtEditorKeyValueHidden" Canvas.Left="209" TextWrapping="Wrap" Canvas.Top="34" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             </Canvas>
         </GroupBox>
+        <GroupBox Height="416" Header="Szyfrowanie / Deszyfrowanie" Width="760" Canvas.Left="10" Canvas.Top="237" HorizontalAlignment="Center" VerticalAlignment="Top" >
+            <Canvas Margin="0,0,27,0" Height="260">
+                <TextBox Name="TxtEditorForPlainText" Canvas.Left="10" TextWrapping="Wrap" Text="Tu podaj tekst jawny" Canvas.Top="45" Width="276" HorizontalAlignment="Center" Height="169" VerticalAlignment="Top"/>
+                <Button Content="Szyfruj &gt;&gt;" Canvas.Left="327" Canvas.Top="105" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="67"/>
+                <Button Content="&lt;&lt; Deszyfruj " Canvas.Left="313" Canvas.Top="142" Height="28" Width="103" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <GroupBox Height="97" Header="Otwórz plik zawierający tekst jawny" Width="304" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="10" Canvas.Top="-61">
+                    <Canvas>
+                        <Button Name="OpenFileWithPlainTextButton" Click="OpenFileWithPlainTextButton_Click" Content="Otwórz plik po nazwie" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="146" Canvas.Top="39" Height="26" Width="139"/>
+                        <Button Name="OpenFileWithPlainTextButtonWithDialog" Click="OpenFileWithPlainTextButtonWithDialog_Click" Content="Otwórz plik z dialogu" Canvas.Left="76" Canvas.Top="10" Height="24" Width="140"/>
+                        <TextBox Name="OpenFileWithPlainText" Canvas.Left="10" TextWrapping="Wrap" Text="Nazwa pliku" Canvas.Top="39" Width="131" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Canvas>
+
+                </GroupBox>
+
+                <GroupBox Height="97" Header="Zapisz plik zawierający tekst jawny" Width="304" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="10" Canvas.Top="223">
+                    <Canvas>
+                        <Button Name="SaveFileWithPlainTextButton" Click="SaveFileWithPlainTextButton_Click" Content="Zapisz plik po nazwie" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="146" Canvas.Top="39" Height="26" Width="139"/>
+                        <Button Name="SaveFileWithPlainTextButtonWithDialog" Click="SaveFileWithPlainTextButtonWithDialog_Click" Content="Zapisz plik z dialogu" Canvas.Left="76" Canvas.Top="10" Height="24" Width="140"/>
+                        <TextBox Name="SaveFileWithPlainText" Canvas.Left="10" TextWrapping="Wrap" Text="Nazwa pliku" Canvas.Top="39" Width="131" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Canvas>
+
+                </GroupBox>
+                <GroupBox Height="97" Header="Otwórz plik zawierający tekst jawny" Width="304" Canvas.Left="10" Canvas.Top="-61" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Canvas>
+                        <Button x:Name="OpenFileWithPlainTextButton1" Click="OpenFileWithPlainTextButton_Click" Content="Otwórz plik po nazwie" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="146" Canvas.Top="39" Height="26" Width="139"/>
+                        <Button x:Name="OpenFileWithPlainTextButtonWithDialog1" Click="OpenFileWithPlainTextButtonWithDialog_Click" Content="Otwórz plik z dialogu" Canvas.Left="76" Canvas.Top="10" Height="24" Width="140"/>
+                        <TextBox x:Name="OpenFileWithPlainText1" Canvas.Left="10" TextWrapping="Wrap" Text="Nazwa pliku" Canvas.Top="39" Width="131" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Canvas>
+
+                </GroupBox>
+            </Canvas>
+        </GroupBox>
     </Canvas>
 </Window>
