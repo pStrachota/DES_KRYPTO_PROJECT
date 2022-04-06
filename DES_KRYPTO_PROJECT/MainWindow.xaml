@@ -3,10 +3,42 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DES_KRYPTO_PROJECT"
+        xmlns:local="clr-namespace:DES"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="DES" Height="750" Width="800">
+    <Canvas Margin="0,0,0,-106">
+        <Canvas.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black"/>
+                <GradientStop Color="White" Offset="1"/>
+                <GradientStop Color="#FF00FFDD" Offset="0"/>
+            </LinearGradientBrush>
+        </Canvas.Background>
 
-    </Grid>
+        <GroupBox Height="232" Header="Klucz&#xD;&#xA;" Width="772" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="10" >
+            <Canvas Margin="0,0,17,10">
+                <Label Content="Wartość klucza&#xD;&#xA;" Canvas.Left="225" Canvas.Top="7" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Name="TxtEditorForKey" Canvas.Left="209" TextWrapping="Wrap" Canvas.Top="34" Width="120"/>
+
+                <Label Content="Wygeneruj wartość klucza&#xD;&#xA;&#xA;" Canvas.Left="380" Canvas.Top="6" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Button Content="Generuj klucz" Canvas.Left="397" Canvas.Top="34" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30" Width="122"/>
+                <GroupBox Height="97" Header="Otwórz plik zawierający wartość klucza" Width="304" Canvas.Left="10" Canvas.Top="86" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Canvas>
+                        <Button Name="OpenFileWithKeyValueButton" Click="OpenFileWithKeyValueButton_Click" Content="Otwórz plik po nazwie" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="146" Canvas.Top="39" Height="26" Width="139"/>
+                        <Button Name="OpenFileWithKeyValueButtonWithDialog" Click="OpenFileWithKeyValueButtonWithDialog_Click" Content="Otwórz plik z dialogu" Canvas.Left="76" Canvas.Top="10" Height="24" Width="140"/>
+                        <TextBox Name="OpenFileWithKeyValueText" Canvas.Left="10" TextWrapping="Wrap" Text="Nazwa pliku" Canvas.Top="39" Width="131" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Canvas>
+
+                </GroupBox>
+                <GroupBox Height="97" Header="Zapisz plik zawierający wartość klucza" Width="304" Canvas.Left="433" Canvas.Top="86" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Canvas>
+                        <Button Name="SaveFileWithKeyValueButton" Click="SaveFileWithKeyValueButton_Click" Content="Zapisz plik po nazwie" HorizontalAlignment="Center" VerticalAlignment="Top" Canvas.Left="146" Canvas.Top="39" Height="26" Width="139"/>
+                        <Button Name="SaveFileWithKeyValueButtonWithDialog" Click="SaveFileWithKeyValueButtonWithDialog_Click" Content="Zapisz plik z dialogu" Canvas.Left="76" Canvas.Top="10" Height="24" Width="140"/>
+                        <TextBox Name="SaveFileWithKeyValueText" Canvas.Left="10" TextWrapping="Wrap" Text="Nazwa pliku" Canvas.Top="39" Width="131" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Canvas>
+                </GroupBox>
+                <TextBox Visibility="Hidden" Name="TxtEditorKeyValueHidden" Canvas.Left="209" TextWrapping="Wrap" Canvas.Top="34" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </Canvas>
+        </GroupBox>
+    </Canvas>
 </Window>
