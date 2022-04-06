@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DES"
+        xmlns:local="clr-namespace:DES_KRYPTO_PROJECT"
         mc:Ignorable="d"
         Title="DES" Height="750" Width="800">
     <Canvas Margin="0,0,0,-106">
@@ -37,6 +37,15 @@
                         <TextBox Name="SaveFileWithKeyValueText" Canvas.Left="10" TextWrapping="Wrap" Text="Nazwa pliku" Canvas.Top="39" Width="131" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Canvas>
                 </GroupBox>
+                <Expander ExpandDirection="Left" Height="101" Header="Autorzy" Canvas.Left="574" Width="182" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="-15">
+                    <GroupBox Height="94" Header="Autorzy&#xA;" Width="130" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                        <Canvas Margin="0,0,107,10">
+                            <Label Content="Imię i nazwisko" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" Canvas.Top="-14"/>
+                            <Label Content="Piotr Strachota" Canvas.Left="10" HorizontalAlignment="Center" Canvas.Top="11" VerticalAlignment="Top"/>
+                            <Label Content="Mateusz Dargiel" Canvas.Left="10" Canvas.Top="27" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        </Canvas>
+                    </GroupBox>
+                </Expander>
                 <TextBox Visibility="Hidden" Name="TxtEditorKeyValueHidden" Canvas.Left="209" TextWrapping="Wrap" Canvas.Top="34" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             </Canvas>
         </GroupBox>
