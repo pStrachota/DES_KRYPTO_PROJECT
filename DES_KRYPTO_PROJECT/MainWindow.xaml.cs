@@ -115,6 +115,27 @@ namespace DES_KRYPTO_PROJECT
             if (saveFileDialog.ShowDialog() == true)
                 File.WriteAllText(saveFileDialog.FileName, TxtEditorForKey.Text);
         }
+
+        private void ShowKey_Click(object sender, RoutedEventArgs e)
+        {
+            if ((bool)ShowKey.IsChecked)
+            {
+                int len = TxtEditorForKey.Text.Length;
+
+                StringBuilder keyHidden = new();
+
+                for (int i = 0; i < len; i++)
+                {
+                    keyHidden.Append("*");
+                }
+                TxtEditorKeyValueHidden.Text = keyHidden.ToString();
+                TxtEditorKeyValueHidden.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TxtEditorKeyValueHidden.Visibility = Visibility.Hidden;
+            }
+        }
     }
 }
 
