@@ -69,6 +69,112 @@ namespace DES_KRYPTO_PROJECT
             return fileDialog;
         }
 
+        private void OpenFileWithPlainTextButtonWithDialog_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new();
+            openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+
+            openFileDialog.InitialDirectory = BuildInitialDirectory("TekstyJawneKRYPTO").ToString();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                TxtEditorForPlainText.Text = File.ReadAllText(openFileDialog.FileName);
+            }
+        }
+
+        private void OpenKeyButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new();
+            openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (openFileDialog.ShowDialog() == true)
+            {
+                TxtEditorForKey.Text = File.ReadAllText(openFileDialog.FileName);
+            }
+        }
+
+        private void SaveFileWithPlainTextButton_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder pathToFile = BuildPathToFile("TekstyJawneKRYPTO", SaveFileWithPlainText.Text);
+
+            if (SaveFileWithPlainText.Text != "")
+            {
+                File.WriteAllText(pathToFile.ToString(), TxtEditorForPlainText.Text);
+                MessageBox.Show("zapisano do pliku: " + pathToFile.ToString());
+            }
+        }
+
+        private void SaveFileWithPlainTextButtonWithDialog_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = (SaveFileDialog)BuildSaveFileDialog(true, "TekstyJawneKRYPTO");
+
+            if (saveFileDialog.ShowDialog() == true)
+                File.WriteAllText(saveFileDialog.FileName, TxtEditorForPlainText.Text);
+        }
+
+        private void OpenFileWithCryptogramButton_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder pathToFile = BuildPathToFile("TekstyZaszyfrowaneKRYPTO", OpenFileWithCryptogramText.Text);
+
+            if (OpenFileWithCryptogramText.Text != "")
+            {
+                try
+                {
+                    TxtEditorForCryptogram.Text = File.ReadAllText(pathToFile.ToString());
+                    MessageBox.Show("wczytano z pliku: " + pathToFile.ToString());
+                }
+                catch
+                {
+                    MessageBox.Show("nie znaleziono pliku o podanej nazwie");
+                }
+            }
+        }
+
+        private void OpenFileWithCryptogramButtonWithDialog_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = (OpenFileDialog)BuildSaveFileDialog(false, "TekstyZaszyfrowaneKRYPTO");
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                TxtEditorForCryptogram.Text = File.ReadAllText(openFileDialog.FileName);
+            }
+        }
+
+        private void SaveFileWithCryptogramButton_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder pathToFile = BuildPathToFile("TekstyZaszyfrowaneKRYPTO", SaveFileWithCryptogramText.Text);
+
+            if (SaveFileWithCryptogramText.Text != "")
+            {
+                File.WriteAllText(pathToFile.ToString(), TxtEditorForCryptogram.Text);
+                MessageBox.Show("zapisano do pliku: " + pathToFile.ToString());
+            }
+        }
+
+        private void SaveFileWithCryptogramButtonWithDialog_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = (SaveFileDialog)BuildSaveFileDialog(true, "TekstyZaszyfrowaneKRYPTO");
+
+            if (saveFileDialog.ShowDialog() == true)
+                File.WriteAllText(saveFileDialog.FileName, SaveFileWithCryptogramText.Text);
+        }
+
+        private void OpenFileWithPlainTextButton_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder pathToFile = BuildPathToFile("TekstyJawneKRYPTO", OpenFileWithPlainText.Text);
+
+            if (OpenFileWithPlainText.Text != "")
+            {
+                try
+                {
+                    TxtEditorForPlainText.Text = File.ReadAllText(pathToFile.ToString());
+                    MessageBox.Show("wczytano z pliku: " + pathToFile.ToString());
+                }
+                catch
+                {
+                    MessageBox.Show("nie znaleziono pliku o podanej nazwie");
+                }
+            }
+        }
         private void OpenFileWithKeyValueButton_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder pathToFile = BuildPathToFile("TekstyKluczaKRYPTO", TxtEditorForKey.Text);
