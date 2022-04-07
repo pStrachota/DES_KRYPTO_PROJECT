@@ -26,6 +26,23 @@ namespace DES_KRYPTO_PROJECT
         public MainWindow()
         {
             InitializeComponent();
+
+            List<StringBuilder> dirs = new();
+            dirs.Add(new StringBuilder().Append("TekstyKluczaKRYPTO"));
+            dirs.Add(new StringBuilder().Append("TekstyJawneKRYPTO"));
+            dirs.Add(new StringBuilder().Append("TekstyZaszyfrowaneKRYPTO"));
+
+            foreach(StringBuilder dir in dirs)
+            {
+                StringBuilder dirsToCheck = new StringBuilder();
+                dirsToCheck.Append(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+                dirsToCheck.Append(Path.DirectorySeparatorChar);
+                dirsToCheck.Append(dir);
+
+                if(!Directory.Exists(dirsToCheck.ToString())) {
+                    Directory.CreateDirectory(dirsToCheck.ToString());
+                }
+            }
         }
 
         StringBuilder BuildPathToFile(String directory, String SaveOrOpen)
