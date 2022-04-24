@@ -84,8 +84,8 @@ namespace DES_KRYPTO_PROJECT
             BitArray keybits = ChopIntoBits(key);
             BitArray keybitsC = new(28);
             BitArray keybitsD = new(28);
-            BitArray holderL = new(28);
-            BitArray holderR = new(28);
+            BitArray holderL = new(32);
+            BitArray holderR = new(32);
             bool[] buff = new bool[2];
             //expanding bitarrays to fit (56 bits for key,64 bit blocks for plaintext
             if (textbits.Length%64!=0) textbits.Length+=64 - (textbits.Length % 64);
@@ -109,49 +109,50 @@ namespace DES_KRYPTO_PROJECT
                     {
                         buff[0] = keybitsC[27];
                         keybitsC.LeftShift(1);
-                        keybitsC[27] = buff[0];
+                        keybitsC[0] = buff[0];
 
                         buff[1] = keybitsD[27];
                         keybitsD.LeftShift(1);
-                        keybitsD[27] = buff[1];
+                        keybitsD[0] = buff[1];
 
                         keybits = UseTable(glueKey(keybitsC, keybitsD), PC2, 48);
                     } else {
                         buff[0] = keybitsC[26];
                         buff[1] = keybitsC[27];
                         keybitsC.LeftShift(2);
-                        keybitsC[26] = buff[0];
-                        keybitsC[26] = buff[1];
+                        keybitsC[0] = buff[0];
+                        keybitsC[1] = buff[1];
 
                         buff[0] = keybitsD[26];
                         buff[1] = keybitsD[27];
                         keybitsD.LeftShift(2);
-                        keybitsD[26] = buff[0];
-                        keybitsD[26] = buff[1];
+                        keybitsD[0] = buff[0];
+                        keybitsD[1] = buff[1];
 
                         keybits = UseTable(glueKey(keybitsC, keybitsD), PC2, 48);
                     }
                     //podział bloku na połowy
                     for (int i = 0; i < blockcount; i++)
                     {
-                        for (int h = 0; h < 28; h++)
+                        for (int h = 0; h < 32; h++)
                         {
                             holderL[h] = textbits[h + i * 64];
-                            holderR[h] = textbits[h + i * 64 + 28];
+                            holderR[h] = textbits[h + i * 64 + 32];
                         }
                     holderR = UseTable(holderR, E, 48);
                     holderR.Xor(keybits);
                     holderR = Sbox(holderR);
                     holderR.Xor(holderL);
                     holderR = UseTable(holderR, P, 32);
-                        for (int h = 0; h < 28; h++)
+                        for (int h = 0; h < 32; h++)
                         {
                             textbits[h + i * 64] = holderR[h];
-                            textbits[h + i * 64 + 28] = holderL[h];
+                            textbits[h + i * 64 + 32] = holderL[h];
                         }
                     }
                 }
-            return "";
+                
+            return GlueIntoString(textbits);
         }
         public String Decrypt(String plaintext, String key)
         {
@@ -168,13 +169,21 @@ namespace DES_KRYPTO_PROJECT
             BitArray bits = new(bytes);
             return bits;
         }
-
+        private static String GlueIntoString(BitArray input)
+        {
+            int size = (input.Length - 1) / 8 + 1;
+            byte[] bytes = new byte[size];
+            input.CopyTo(bytes, 0);
+            return BitConverter.ToString(bytes);
+        }
         private static BitArray UseTable(BitArray arr,int[] table,int size)
         {
+            if (size != table.Length) throw new Exception();
             BitArray output = new(size);
             for(int i = 0; i < table.Length; i++)
             {
-                output[i] = arr[table[i]];
+                int pos = table[i]-1;
+                output[i] = arr[pos];
             }
             return output;
         }
@@ -190,6 +199,7 @@ namespace DES_KRYPTO_PROJECT
         }
         private BitArray Sbox(BitArray input)
         {
+            int count = 0;
             BitArray result = new(32);
             BitArray rowbits = new(2);
             BitArray colbits = new(4);
@@ -199,14 +209,16 @@ namespace DES_KRYPTO_PROJECT
                 rowbits[0] = input[0 + i * 6];//pierwszy
                 rowbits[1] = input[5 + i * 6];//ostatni
 
-                for(int k = 1; k < 5; k++)
+                for(int k = 0; k < 4; k++)
                 {
-                    colbits[k] = input[k + i * 6]; //środkowe
+                    colbits[k] = input[k + i * 6 + 1]; //środkowe
                 }
-                BitArray buff = new BitArray(BitConverter.GetBytes(Sboxpicker(GetIntFromBitArray(colbits), GetIntFromBitArray(rowbits), i)));
+                int a = GetIntFromBitArray(colbits);
+                int b = GetIntFromBitArray(rowbits);
+                BitArray buff = new BitArray(BitConverter.GetBytes(Sboxpicker(a,b, i)));
                 for (int j = 0; j < 4; j++)
                 {
-                    result[i * 8 + j] = buff[j];
+                    result[i * 4 + j] = buff[j];
                 }
             }
             return result;
@@ -214,7 +226,7 @@ namespace DES_KRYPTO_PROJECT
         private static int Sboxpicker(int col,int row,int index)
         {
             int result = 0;
-            switch (index)
+            switch (index+1)
             {
                 case 1:
                     result = S1[col + row*16];
@@ -249,9 +261,11 @@ namespace DES_KRYPTO_PROJECT
 
             if (bitArray.Length > 32)
                 throw new ArgumentException("Argument length shall be at most 32 bits.");
-            byte[] ret = new byte[(bitArray.Length - 1) / 8 + 1];
+            int size = (bitArray.Length - 1) / 8 + 1;
+            if (size < 2) size = 2;
+            byte[] ret = new byte[size];
             bitArray.CopyTo(ret, 0);
-            return BitConverter.ToInt32(ret, 0);
+            return BitConverter.ToInt16(ret, 0);
 
         }
         public static String Test()
