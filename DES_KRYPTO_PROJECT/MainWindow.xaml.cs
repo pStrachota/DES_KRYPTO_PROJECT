@@ -259,6 +259,16 @@ namespace DES_KRYPTO_PROJECT
                 TxtEditorKeyValueHidden.Visibility = Visibility.Hidden;
             }
         }
+
+        private void Encrypt(object sender, RoutedEventArgs e)
+        {
+            String plaintext = TxtEditorForPlainText.Text;
+            String key = "abcdefgh";
+            DES encryptor = new DES();
+            String cryptogram = encryptor.Encrypt(plaintext,key);
+            MessageBox.Show(cryptogram);
+            //MessageBox.Show(encryptor.test());
+        }
     }
 }
 

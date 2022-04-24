@@ -53,7 +53,7 @@
         <GroupBox Height="416" Header="Szyfrowanie / Deszyfrowanie" Width="760" Canvas.Left="10" Canvas.Top="237" HorizontalAlignment="Center" VerticalAlignment="Top" >
             <Canvas Margin="0,0,27,0" Height="260">
                 <TextBox Name="TxtEditorForPlainText" Canvas.Left="10" TextWrapping="Wrap" Text="Tu podaj tekst jawny" Canvas.Top="45" Width="276" HorizontalAlignment="Center" Height="169" VerticalAlignment="Top"/>
-                <Button Content="Szyfruj &gt;&gt;" Canvas.Left="327" Canvas.Top="105" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="67"/>
+                <Button Click="Encrypt" Content="Szyfruj &gt;&gt;" Canvas.Left="327" Canvas.Top="105" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="67"/>
                 <Button Content="&lt;&lt; Deszyfruj " Canvas.Left="313" Canvas.Top="142" Height="28" Width="103" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <TextBox Name="TxtEditorForCryptogram" Canvas.Left="460" TextWrapping="Wrap" Text="Tu podaj szyfrogram" Canvas.Top="49" Width="280" Height="165" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
