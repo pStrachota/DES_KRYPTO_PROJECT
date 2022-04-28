@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DES_KRYPTO_PROJECT", "DES_KRYPTO_PROJECT\DES_KRYPTO_PROJECT.csproj", "{48E07E1B-33CB-4291-AEC1-0DE9B55CDA84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATA_ENCRYPTION_STANDARD", "DATA_ENCRYPTION_STANDARD\DATA_ENCRYPTION_STANDARD.csproj", "{572D9432-80D5-41C9-83BE-5D7A21F4CD1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{48E07E1B-33CB-4291-AEC1-0DE9B55CDA84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48E07E1B-33CB-4291-AEC1-0DE9B55CDA84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48E07E1B-33CB-4291-AEC1-0DE9B55CDA84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{572D9432-80D5-41C9-83BE-5D7A21F4CD1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{572D9432-80D5-41C9-83BE-5D7A21F4CD1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{572D9432-80D5-41C9-83BE-5D7A21F4CD1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{572D9432-80D5-41C9-83BE-5D7A21F4CD1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
