@@ -21,7 +21,7 @@
                 <TextBox Name="TxtEditorForKey" Canvas.Left="209" TextWrapping="Wrap" Canvas.Top="34" Width="120"/>
 
                 <Label Content="Wygeneruj wartość klucza&#xD;&#xA;&#xA;" Canvas.Left="380" Canvas.Top="6" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <Button Content="Generuj klucz" Canvas.Left="397" Canvas.Top="34" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30" Width="122"/>
+                <Button Click="GenerateKey_OnClick" Content="Generuj klucz" Canvas.Left="397" Canvas.Top="34" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30" Width="122"/>
                 <CheckBox Name="ShowKey" Click="ShowKey_Click" Content="Ukryj klucz" Canvas.Left="229" Canvas.Top="57" RenderTransformOrigin="0.939,0.789"/>
                 <GroupBox Height="97" Header="Otwórz plik zawierający wartość klucza" Width="304" Canvas.Left="10" Canvas.Top="86" HorizontalAlignment="Center" VerticalAlignment="Top">
                     <Canvas>

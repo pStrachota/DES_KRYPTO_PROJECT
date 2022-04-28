@@ -259,16 +259,35 @@ namespace DES_KRYPTO_PROJECT
                 TxtEditorKeyValueHidden.Visibility = Visibility.Hidden;
             }
         }
-
+        
+        static Random random = new Random();
+        public static string GetRandomHexNumber(int digits)
+        {
+            byte[] buffer = new byte[digits / 2];
+            random.NextBytes(buffer);
+            string result = String.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
+            if (digits % 2 == 0)
+                return result;
+            return result + random.Next(16).ToString("X");
+        }
+        
         private void Encrypt(object sender, RoutedEventArgs e)
         {
             String plaintext = TxtEditorForPlainText.Text;
-            String key = "abcdefgh";
+            String loadedKey = TxtEditorForKey.Text;
             DES encryptor = new DES();
-            String cryptogram = encryptor.Encrypt(plaintext,key);
+            String cryptogram = encryptor.Encrypt(plaintext,loadedKey);
             TxtEditorForCryptogram.Text = cryptogram;
-            //MessageBox.Show(cryptogram);
-            //MessageBox.Show(DES.Test());
+        }
+
+        private void GenerateKey_OnClick(object sender, RoutedEventArgs e)
+        {
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            String keyGenerated = new string(Enumerable.Repeat(chars, 16)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+            
+            TxtEditorForKey.Text = GetRandomHexNumber(16);
         }
     }
 }
