@@ -275,9 +275,10 @@ namespace DES_KRYPTO_PROJECT
         {
             String plaintext = TxtEditorForPlainText.Text;
             String loadedKey = TxtEditorForKey.Text;
-            DES encryptor = new DES();
-            String cryptogram = encryptor.Encrypt(plaintext,loadedKey);
-            TxtEditorForCryptogram.Text = cryptogram;
+            DES.Test();
+            //DES encryptor = new DES();
+            //String cryptogram = encryptor.Encrypt(plaintext,loadedKey);
+            //TxtEditorForCryptogram.Text = cryptogram;
         }
 
         private void GenerateKey_OnClick(object sender, RoutedEventArgs e)

@@ -11,9 +11,11 @@ namespace DES_KRYPTO_PROJECT
     {
         private static readonly int[] PC1 = new int[]
         {
-            57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18,
+            57, 49, 41, 33, 25, 17, 9,
+            1, 58, 50, 42, 34, 26, 18,
             10, 2, 59, 51, 43, 35, 27,
             19, 11, 3, 60, 52, 44, 36,
+
             63, 55, 47, 39, 31, 23, 15,
             7, 62, 54, 46, 38, 30, 22,
             14, 6, 61, 53, 45, 37, 29,
@@ -22,12 +24,15 @@ namespace DES_KRYPTO_PROJECT
 
         private static readonly int[] PC2 = new int[]
         {
-            14, 17, 11, 24, 1, 5, 3, 28,
-            15, 6, 21, 10, 23, 19, 12, 4,
-            26, 8, 16, 7, 27, 20, 13, 2,
-            41, 52, 31, 37, 47, 55, 30, 40,
-            51, 45, 33, 48, 44, 49, 39, 56,
-            34, 53, 46, 42, 50, 36, 29, 32
+            14, 17, 11, 24, 1, 5,
+            3, 28, 15, 6, 21, 10,
+            23, 19, 12, 4, 26, 8,
+            16, 7, 27, 20, 13, 2,
+
+            41, 52, 31, 37, 47, 55,
+            30, 40, 51, 45, 33, 48,
+            44, 49, 39, 56, 34, 53, 
+            46, 42, 50, 36, 29, 32
         };
 
         private static readonly int[] E = new int[]
@@ -118,58 +123,41 @@ namespace DES_KRYPTO_PROJECT
         public String Encrypt(String plaintext, String key)
         {
             //input
-            BitArray textbits = ChopIntoBits(plaintext);
-            BitArray keybits = ChopIntoBits(key);
-            BitArray keybitsC = new(28);
-            BitArray keybitsD = new(28);
-            BitArray holderL = new(32);
-            BitArray holderR = new(32);
+            byte[] textbytes = Encoding.ASCII.GetBytes(plaintext);
+            byte[] keybytes = Encoding.ASCII.GetBytes(plaintext);
+            
+            byte[] holderL = new byte[4];
+            byte[] holderR = new byte[4];
             bool[] buff = new bool[2];
             //expanding bitarrays to fit (56 bits for key,64 bit blocks for plaintext
-            if (textbits.Length % 64 != 0) textbits.Length += 64 - (textbits.Length % 64);
-            int blockcount = textbits.Length / 64;
-            if (keybits.Length != 64)
+            if (textbytes.Length % 8 != 0)
             {
-                keybits.Length = 64;
+                byte[] temp = new byte[textbytes.Length + textbytes.Length % 8];
+                textbytes.CopyTo(temp, 0);
             }
+            int blockcount = textbytes.Length / 8;
 
-            keybits = UseTable(keybits, PC1, 56);
-            for (int i = 0; i < 28; i++)
-            {
-                keybitsC[i] = keybits[i];
-                keybitsD[i] = keybits[i + 28];
-            }
+            keybytes = UseTable(keybytes, PC1);
+
+            byte[] keybytesC = Auxx.selectBits(keybytes, 0, 28);
+            byte[] keybytesD = Auxx.selectBits(keybytes, 28, 28);
 
             for (int j = 1; j <= 16; j++)
             {
                 //generate subkey
                 if (j == 1 || j == 2 || j == 9 || j == 16)
                 {
-                    buff[0] = keybitsC[27];
-                    keybitsC.LeftShift(1);
-                    keybitsC[0] = buff[0];
+                    Auxx.rotateLeft(keybytesC,28,1);
+                    Auxx.rotateLeft(keybytesD,28,1);
 
-                    buff[1] = keybitsD[27];
-                    keybitsD.LeftShift(1);
-                    keybitsD[0] = buff[1];
-
-                    keybits = UseTable(glueKey(keybitsC, keybitsD), PC2, 48);
+                    keybytes = UseTable(GlueKey(keybytesC,keybytesD),PC2);
                 }
                 else
                 {
-                    buff[0] = keybitsC[26];
-                    buff[1] = keybitsC[27];
-                    keybitsC.LeftShift(2);
-                    keybitsC[0] = buff[0];
-                    keybitsC[1] = buff[1];
+                    Auxx.rotateLeft(keybytesC, 28, 2);
+                    Auxx.rotateLeft(keybytesD, 28, 2);
 
-                    buff[0] = keybitsD[26];
-                    buff[1] = keybitsD[27];
-                    keybitsD.LeftShift(2);
-                    keybitsD[0] = buff[0];
-                    keybitsD[1] = buff[1];
-
-                    keybits = UseTable(glueKey(keybitsC, keybitsD), PC2, 48);
+                    keybytes = UseTable(GlueKey(keybytesC, keybytesD), PC2);
                 }
 
                 //podział bloku na połowy
@@ -177,24 +165,24 @@ namespace DES_KRYPTO_PROJECT
                 {
                     for (int h = 0; h < 32; h++)
                     {
-                        holderL[h] = textbits[h + i * 64];
-                        holderR[h] = textbits[h + i * 64 + 32];
+                        holderL[h] = textbytes[h + i * 64];
+                        holderR[h] = textbytes[h + i * 64 + 32];
                     }
 
-                    holderR = UseTable(holderR, E, 48);
-                    holderR.Xor(keybits);
+                    holderR = UseTable(holderR, E);
+                    Auxx.XORBytes(holderL, keybytes);
                     holderR = Sbox(holderR);
-                    holderR.Xor(holderL);
-                    holderR = UseTable(holderR, P, 32);
+                    holderR = UseTable(holderR, P);
+                    Auxx.XORBytes(holderR,holderL);
                     for (int h = 0; h < 32; h++)
                     {
-                        textbits[h + i * 64] = holderR[h];
-                        textbits[h + i * 64 + 32] = holderL[h];
+                        textbytes[h + i * 64] = holderR[h];
+                        textbytes[h + i * 64 + 32] = holderL[h];
                     }
                 }
             }
 
-            return GlueIntoString(textbits);
+            return "";// GlueIntoString(textbytes);
         }
 
         public String Decrypt(String plaintext, String key)
@@ -202,71 +190,77 @@ namespace DES_KRYPTO_PROJECT
             return "";
         }
 
-        private static BitArray ChopIntoBits(String input)
-        {
-            char[] chars = input.ToCharArray();
-            byte[] bytes = new byte[chars.Length];
-            for (int i = 0; i < chars.Length; i++)
-            {
-                bytes[i] = (byte) chars[i];
-            }
-
-            BitArray bits = new(bytes);
-            return bits;
-        }
-
         private static String GlueIntoString(BitArray input)
         {
             int size = (input.Length - 1) / 8 + 1;
             byte[] bytes = new byte[size];
             input.CopyTo(bytes, 0);
-            return BitConverter.ToString(bytes);
+            return new String(ByteArrayToString(bytes));
         }
-
-        private static BitArray UseTable(BitArray arr, int[] table, int size)
+        public static string ByteArrayToString(byte[] ba)
         {
-            if (size != table.Length) throw new Exception();
-            BitArray output = new(size);
-            for (int i = 0; i < table.Length; i++)
+            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            foreach (byte b in ba)
+                hex.AppendFormat("{0:x2}", b);
+            return hex.ToString();
+        }
+        private static byte[] UseTable(byte[] arr, int[] table)
+        {
+            int len = table.Length;
+            int bytenum = (len - 1) / 8 + 1;
+            byte[] output = new byte[bytenum];
+            for (int i = 0; i < len; i++)
             {
-                int pos = table[i] - 1;
-                output[i] = arr[pos];
+                int val = Auxx.getBitAt(arr, table[i] - 1);
+                Auxx.setBitAt(output, i, val);
             }
 
             return output;
         }
 
-        private BitArray glueKey(BitArray arrC, BitArray arrD)
+        private byte[] GlueKey(byte[] arrC, byte[] arrD)
         {
-            BitArray result = new(56);
-            for (int i = 0; i < 28; i++)
+            byte[] result = new byte[56];
+            for (int i = 0; i < 27; i++)
             {
                 result[i] = arrC[i];
-                result[i + 28] = arrD[i];
+                result[i + 29] = arrD[i];
             }
-
+            for(int i = 0; i < 4; i++)
+            {
+                int val = Auxx.getBitAt(arrC, 24 + i); //24-27
+                Auxx.setBitAt(result, 24 + i, val);
+                val = Auxx.getBitAt(arrD, i); // 0-3
+                Auxx.setBitAt(result, 28 + i, val);
+            }
             return result;
         }
 
-        private BitArray Sbox(BitArray input)
+        private byte[] Sbox(byte[] input)
         {
             int count = 0;
-            BitArray result = new(32);
-            BitArray rowbits = new(2);
-            BitArray colbits = new(4);
+            byte[] bytes6 = new byte[input.Length];
+            byte rowbyte;
+            byte colbyte;
             //8 wierszy po 6 bitów
+            int size = (8 * input.Length - 1) / 6 + 1;
+            for (int i = 0; i < size; i++)
+            {
+                for(int j = 0; j < 6; j++)
+                {
+                    int val = Auxx.getBitAt(input, 6 * i + j);
+                    Auxx.setBitAt(bytes6, 8 * i + j, val);
+                }
+            }
             for (int i = 0; i < 8; i++)
             {
-                rowbits[0] = input[0 + i * 6]; //pierwszy
-                rowbits[1] = input[5 + i * 6]; //ostatni
+                rowbyte = (byte) (((input[i] >> 6) & 2) | ((input[i] >> 2) & 1));
 
-                for (int k = 0; k < 4; k++)
+            for (int k = 0; k < 4; k++)
                 {
-                    colbits[k] = input[k + i * 6 + 1]; //środkowe
+                    colbyte[k] = input[k + i * 6 + 1]; //środkowe
                 }
 
-                int a = GetIntFromBitArray(colbits);
-                int b = GetIntFromBitArray(rowbits);
                 BitArray buff = new BitArray(BitConverter.GetBytes(Sboxpicker(a, b, i)));
                 for (int j = 0; j < 4; j++)
                 {
@@ -322,13 +316,32 @@ namespace DES_KRYPTO_PROJECT
             return BitConverter.ToInt16(ret, 0);
         }
 
+        private static byte[][] ProduceBitmap(String input)
+        {
+            byte[] buffer = Encoding.ASCII.GetBytes(input);
+            byte[][] result = new byte[buffer.Length][];
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    result[i][j] = (byte)(buffer[i] & (1 >> j));
+                }
+            }
+            return result;
+        }
+
         public static String Test()
         {
-            byte[] input = BitConverter.GetBytes(7);
-            BitArray converted = new BitArray(input);
-            int a = GetIntFromBitArray((BitArray) converted);
-
-            return a.ToString();
+            byte x,y;
+            x = 1;
+            y = 3;
+            for(int i = 0; i < 4;i++)
+            {
+                byte a;
+                a = (byte)(x & y);
+                x = (byte)(x << 1);
+            }
+            return "";
         }
     }
 }

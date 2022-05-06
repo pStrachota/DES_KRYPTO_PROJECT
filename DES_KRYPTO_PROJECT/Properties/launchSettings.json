@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DES_KRYPTO_PROJECT": {
+      "commandName": "Project"
+    },
+    "Profil 1": {
+      "commandName": "Executable"
+    }
+  }
+}
