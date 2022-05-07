@@ -130,14 +130,14 @@ namespace DES_KRYPTO_PROJECT
             byte[] holderR = new byte[4];
             bool[] buff = new bool[2];
             //expanding bitarrays to fit (56 bits for key,64 bit blocks for plaintext
-            if (textbytes.Length % 8 != 0)
+            if ((textbytes.Length & 7) != 0)
             {
                 byte[] temp = new byte[textbytes.Length + textbytes.Length % 8];
                 textbytes.CopyTo(temp, 0);
             }
             int blockcount = textbytes.Length / 8;
 
-            keybytes = UseTable(keybytes, PC1);
+            keybytes = UseTable(keybytes, PC1); //to wycina 56 bitów i skraca keybytes wiec nie ma potrzeby tego wcześniej obciniać
 
             byte[] keybytesC = Auxx.selectBits(keybytes, 0, 28);
             byte[] keybytesD = Auxx.selectBits(keybytes, 28, 28);
@@ -304,17 +304,6 @@ namespace DES_KRYPTO_PROJECT
             }
 
             return result;
-        }
-
-        private static int GetIntFromBitArray(BitArray bitArray)
-        {
-            if (bitArray.Length > 32)
-                throw new ArgumentException("Argument length shall be at most 32 bits.");
-            int size = (bitArray.Length - 1) / 8 + 1;
-            if (size < 2) size = 2;
-            byte[] ret = new byte[size];
-            bitArray.CopyTo(ret, 0);
-            return BitConverter.ToInt16(ret, 0);
         }
 
         private static byte[][] ProduceBitmap(String input)
