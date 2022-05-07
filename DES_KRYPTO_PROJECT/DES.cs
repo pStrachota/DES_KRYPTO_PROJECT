@@ -124,7 +124,7 @@ namespace DES_KRYPTO_PROJECT
         {
             //input
             byte[] textbytes = Encoding.ASCII.GetBytes(plaintext);
-            byte[] keybytes = Encoding.ASCII.GetBytes(plaintext);
+            byte[] keybytes = Encoding.ASCII.GetBytes(key);
             
             byte[] holderL = new byte[4];
             byte[] holderR = new byte[4];
@@ -134,6 +134,7 @@ namespace DES_KRYPTO_PROJECT
             {
                 byte[] temp = new byte[textbytes.Length + textbytes.Length % 8];
                 textbytes.CopyTo(temp, 0);
+                textbytes = temp;
             }
             int blockcount = textbytes.Length / 8;
 
@@ -147,8 +148,8 @@ namespace DES_KRYPTO_PROJECT
                 //generate subkey
                 if (j == 1 || j == 2 || j == 9 || j == 16)
                 {
-                    Auxx.rotateLeft(keybytesC,28,1);
-                    Auxx.rotateLeft(keybytesD,28,1);
+                    keybytesC = Auxx.rotateLeft(keybytesC,28,1);
+                    keybytesD = Auxx.rotateLeft(keybytesD,28,1);
 
                     keybytes = UseTable(GlueKey(keybytesC,keybytesD),PC2);
                 }
@@ -220,11 +221,11 @@ namespace DES_KRYPTO_PROJECT
 
         private byte[] GlueKey(byte[] arrC, byte[] arrD)
         {
-            byte[] result = new byte[56];
-            for (int i = 0; i < 27; i++)
+            byte[] result = new byte[7];
+            for (int i = 0; i < 3; i++)
             {
                 result[i] = arrC[i];
-                result[i + 29] = arrD[i];
+                result[i + 4] = arrD[i];
             }
             for(int i = 0; i < 4; i++)
             {
