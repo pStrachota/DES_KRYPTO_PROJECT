@@ -124,7 +124,7 @@ namespace DES_KRYPTO_PROJECT
         {
             //input
             byte[] textbytes = Encoding.ASCII.GetBytes(plaintext);
-            byte[] keybytes = Encoding.ASCII.GetBytes(key);
+            byte[] keybytes = StringToByteArray(key);
             
             byte[] holderL = new byte[4];
             byte[] holderR = new byte[4];
@@ -183,27 +183,87 @@ namespace DES_KRYPTO_PROJECT
                 }
             }
 
-            return GlueIntoString(textbytes);
+            return ByteArrayToString(textbytes);
         }
 
         public String Decrypt(String plaintext, String key)
         {
-            return "";
+            byte[] textbytes = StringToByteArray(plaintext);
+            byte[] keybytes = StringToByteArray(key);
+
+            byte[] holderL = new byte[4];
+            byte[] holderR = new byte[4];
+            bool[] buff = new bool[2];
+            //expanding bitarrays to fit (56 bits for key,64 bit blocks for plaintext
+            if ((textbytes.Length & 7) != 0)
+            {
+                byte[] temp = new byte[textbytes.Length + textbytes.Length % 8];
+                textbytes.CopyTo(temp, 0);
+                textbytes = temp;
+            }
+            int blockcount = textbytes.Length / 8;
+
+            keybytes = UseTable(keybytes, PC1); //to wycina 56 bitów i skraca keybytes wiec nie ma potrzeby tego wcześniej obciniać
+
+            byte[] keybytesC = Auxx.selectBits(keybytes, 0, 28);
+            byte[] keybytesD = Auxx.selectBits(keybytes, 28, 28);
+
+            for (int j = 1; j <= 16; j++)
+            {
+                //generate subkey
+                if (j == 1 || j == 2 || j == 9 || j == 16)
+                {
+                    keybytesC = Auxx.rotateRight(keybytesC, 28, 1);
+                    keybytesD = Auxx.rotateRight(keybytesD, 28, 1);
+
+                    keybytes = UseTable(GlueKey(keybytesC, keybytesD), PC2);
+                }
+                else
+                {
+                    keybytesC = Auxx.rotateRight(keybytesC, 28, 2);
+                    keybytesD = Auxx.rotateRight(keybytesD, 28, 2);
+
+                    keybytes = UseTable(GlueKey(keybytesC, keybytesD), PC2);
+                }
+
+                //podział bloku na połowy
+                for (int i = 0; i < blockcount; i++)
+                {
+                    for (int h = 0; h < 4; h++)
+                    {
+                        holderL[h] = textbytes[h + i * 8];
+                        holderR[h] = textbytes[h + i * 8 + 4];
+                    }
+
+                    holderR = UseTable(holderR, E);
+                    holderR = Auxx.XORBytes(holderR, keybytes);
+                    holderR = Sbox(holderR);
+                    holderR = UseTable(holderR, P);
+                    holderR = Auxx.XORBytes(holderR, holderL);
+                    for (int h = 0; h < 4; h++)
+                    {
+                        textbytes[h + i * 8] = holderR[h];
+                        textbytes[h + i * 8 + 4] = holderL[h];
+                    }
+                }
+            }
+
+            return ByteArrayToString(textbytes);
         }
 
-        private static String GlueIntoString(byte[] input)
-        {
-            int size = input.Length;
-            byte[] bytes = new byte[size];
-            input.CopyTo(bytes, 0);
-            return new String(ByteArrayToString(bytes));
-        }
         public static string ByteArrayToString(byte[] ba)
         {
             StringBuilder hex = new StringBuilder(ba.Length * 2);
             foreach (byte b in ba)
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
+        }
+        public static byte[] StringToByteArray(string hex)
+        {
+            return Enumerable.Range(0, hex.Length)
+                .Where(x => x % 2 == 0)
+                .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+                .ToArray();
         }
         private static byte[] UseTable(byte[] arr, int[] table)
         {
@@ -239,12 +299,10 @@ namespace DES_KRYPTO_PROJECT
 
         private byte[] Sbox(byte[] input)
         {
-            int count = 0;
             byte[] output = new byte[4];
             int row;
             int col;
             byte halfofbyte;
-            byte otherhalfofbyte;
             //input = 48 bitów (rozszerzenie E po xorowaniu z kluczem)
             //output = 32 bity po sboxowaniu
             //48/6 = 8 sekcji do przetworzenia
@@ -304,20 +362,6 @@ namespace DES_KRYPTO_PROJECT
                     break;
             }
 
-            return result;
-        }
-
-        private static byte[][] ProduceBitmap(String input)
-        {
-            byte[] buffer = Encoding.ASCII.GetBytes(input);
-            byte[][] result = new byte[buffer.Length][];
-            for (int i = 0; i < buffer.Length; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    result[i][j] = (byte)(buffer[i] & (1 >> j));
-                }
-            }
             return result;
         }
 
