@@ -155,8 +155,8 @@ namespace DES_KRYPTO_PROJECT
                 }
                 else
                 {
-                    Auxx.rotateLeft(keybytesC, 28, 2);
-                    Auxx.rotateLeft(keybytesD, 28, 2);
+                    keybytesC = Auxx.rotateLeft(keybytesC, 28, 2);
+                    keybytesD = Auxx.rotateLeft(keybytesD, 28, 2);
 
                     keybytes = UseTable(GlueKey(keybytesC, keybytesD), PC2);
                 }
