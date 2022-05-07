@@ -81,6 +81,11 @@ public static class Auxx
         return outer;
     }
 
+    public static byte[] rotateRight(byte[] inner, int len, int step)
+    {
+        return rotateLeft(inner, len, 28 - step);
+    }
+
     // public static String bytesToHex(byte bytes[])
     // {
     //     byte []rawData = bytes;

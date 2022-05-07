@@ -183,7 +183,7 @@ namespace DES_KRYPTO_PROJECT
                 }
             }
 
-            return "";// GlueIntoString(textbytes);
+            return GlueIntoString(textbytes);
         }
 
         public String Decrypt(String plaintext, String key)
@@ -191,9 +191,9 @@ namespace DES_KRYPTO_PROJECT
             return "";
         }
 
-        private static String GlueIntoString(BitArray input)
+        private static String GlueIntoString(byte[] input)
         {
-            int size = (input.Length - 1) / 8 + 1;
+            int size = input.Length;
             byte[] bytes = new byte[size];
             input.CopyTo(bytes, 0);
             return new String(ByteArrayToString(bytes));
