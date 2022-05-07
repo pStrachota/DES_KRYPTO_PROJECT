@@ -239,36 +239,37 @@ namespace DES_KRYPTO_PROJECT
         private byte[] Sbox(byte[] input)
         {
             int count = 0;
-            byte[] bytes6 = new byte[input.Length];
-            byte rowbyte;
-            byte colbyte;
-            //8 wierszy po 6 bitów
-            int size = (8 * input.Length - 1) / 6 + 1;
-            for (int i = 0; i < size; i++)
+            byte[] output = new byte[32];
+            int row;
+            int col;
+            byte halfofbyte;
+            byte otherhalfofbyte;
+            //input = 48 bitów (rozszerzenie E po xorowaniu z kluczem)
+            //output = 32 bity po sboxowaniu
+            //48/6 = 8 sekcji do przetworzenia
+            //1. ustaw row i col bytes(z każdych 6 bitów z input)
+            //2. zamień row i col na liczby intowe
+            //3. użyj sboxpicker aby otrzymać liczby
+            //4. wpakuj liczbe do 4 bitów (section*4 aby po wykonaniu tego wszystkiego cały input się zmiejszył
+            //5. użyj 2 zmiennych aby stworzyć kompletny bit z 2 zwróconych
+            for(int section = 0;section<8;section++)
             {
-                for(int j = 0; j < 6; j++)
+                row = Auxx.getBitAt(input, section*6) + Auxx.getBitAt(input,section*6+5)>>1;
+                col = 0;
+                for(int colbit = 0;colbit<4;colbit++)
                 {
-                    int val = Auxx.getBitAt(input, 6 * i + j);
-                    Auxx.setBitAt(bytes6, 8 * i + j, val);
+                    col = Auxx.getBitAt(input, section*6+colbit) >> colbit;
+                }
+                // czy parzysta aka perwszy bit jest równy 0 (jak jest nieparzysta to MUSI by 1)
+                halfofbyte = (byte)Sboxpicker(col, row, section); //4 bity (czy jak przesunę o 4 przy następnych włożeniu to będzie prawidłowo?)
+                if ((section & 1) == 0)
+                {
+                    output[section/2] = (byte)(halfofbyte >> 4);
+                } else {
+                    output[section/2] = halfofbyte;
                 }
             }
-            for (int i = 0; i < 8; i++)
-            {
-                rowbyte = (byte) (((input[i] >> 6) & 2) | ((input[i] >> 2) & 1));
-
-            for (int k = 0; k < 4; k++)
-                {
-                    colbyte[k] = input[k + i * 6 + 1]; //środkowe
-                }
-
-                BitArray buff = new BitArray(BitConverter.GetBytes(Sboxpicker(a, b, i)));
-                for (int j = 0; j < 4; j++)
-                {
-                    result[i * 4 + j] = buff[j];
-                }
-            }
-
-            return result;
+            return output;
         }
 
         private static int Sboxpicker(int col, int row, int index)
