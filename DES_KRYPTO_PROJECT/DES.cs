@@ -164,17 +164,17 @@ namespace DES_KRYPTO_PROJECT
                 //podział bloku na połowy
                 for (int i = 0; i < blockcount; i++)
                 {
-                    for (int h = 0; h < 32; h++)
+                    for (int h = 0; h < 4; h++)
                     {
-                        holderL[h] = textbytes[h + i * 64];
-                        holderR[h] = textbytes[h + i * 64 + 32];
+                        holderL[h] = textbytes[h + i * 8];
+                        holderR[h] = textbytes[h + i * 8 + 4];
                     }
 
                     holderR = UseTable(holderR, E);
-                    Auxx.XORBytes(holderL, keybytes);
+                    holderR = Auxx.XORBytes(holderL, keybytes);
                     holderR = Sbox(holderR);
                     holderR = UseTable(holderR, P);
-                    Auxx.XORBytes(holderR,holderL);
+                    holderR = Auxx.XORBytes(holderR,holderL);
                     for (int h = 0; h < 32; h++)
                     {
                         textbytes[h + i * 64] = holderR[h];
@@ -240,7 +240,7 @@ namespace DES_KRYPTO_PROJECT
         private byte[] Sbox(byte[] input)
         {
             int count = 0;
-            byte[] output = new byte[32];
+            byte[] output = new byte[4];
             int row;
             int col;
             byte halfofbyte;
