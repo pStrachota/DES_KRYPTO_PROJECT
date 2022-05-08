@@ -235,11 +235,12 @@ namespace DES_KRYPTO_PROJECT
                         holderR[h] = textbytes[h + i * 8 + 4];
                     }
 
-                    holderR = UseTable(holderR, E);
-                    holderR = Auxx.XORBytes(holderR, keybytes);
-                    holderR = Sbox(holderR);
-                    holderR = UseTable(holderR, P);
                     holderR = Auxx.XORBytes(holderR, holderL);
+                    holderR = UseTable(holderR, P);
+                    holderR = Sbox(holderR);
+                    holderR = Auxx.XORBytes(holderR, keybytes);
+                    holderR = UseTable(holderR, E);
+
                     for (int h = 0; h < 4; h++)
                     {
                         textbytes[h + i * 8] = holderR[h];
