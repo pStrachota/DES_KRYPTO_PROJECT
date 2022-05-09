@@ -275,18 +275,52 @@ namespace DES_KRYPTO_PROJECT
         {
             String plaintext = TxtEditorForPlainText.Text;
             String loadedKey = TxtEditorForKey.Text;
-            DES encryptor = new DES();
-            String cryptogram = encryptor.Encrypt(plaintext,loadedKey);
-            TxtEditorForCryptogram.Text = cryptogram;
+            if (loadedKey.Length < 16)
+            {
+                MessageBox.Show("KLUCZ JEST ZA KRÓTKI", "ZŁA DŁUGOŚĆ KLUCZA");
+            }
+            else if (loadedKey.Length > 16)
+            {
+                MessageBox.Show("KLUCZ JEST ZA DŁUGI", "ZŁA DŁUGOŚĆ KLUCZA");
+            }
+            else
+            {
+                byte[] bytes = Encoding.ASCII.GetBytes(plaintext);
+                byte[] key = Encoding.ASCII.GetBytes(loadedKey);
+                DES encryptor = new DES();
+                byte[] cryptogram = encryptor.Encrypt(bytes, key);
+                TxtEditorForCryptogram.Text = ByteArrayToString(cryptogram);
+            }
         }
         
         private void Decrypt(object sender, RoutedEventArgs e)
         {
-            String plaintext = TxtEditorForCryptogram.Text;
             String loadedKey = TxtEditorForKey.Text;
-            DES encryptor = new DES();
-            String cryptogram = encryptor.Decrypt(plaintext, loadedKey);
-            TxtEditorForPlainText.Text = cryptogram;
+            String plaintext = TxtEditorForCryptogram.Text;
+            
+            byte[] bytes = Encoding.ASCII.GetBytes(plaintext);
+            byte[] key = Encoding.ASCII.GetBytes(loadedKey);
+            
+            DES des = new DES();
+            byte[] decode = des.Decrypt(bytes, key);
+            String kod = Encoding.ASCII.GetString(decode);
+            TxtEditorForPlainText.Text = kod;
+        }
+        
+        public static string ByteArrayToString(byte[] ba)
+        {
+            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            foreach (byte b in ba)
+                hex.AppendFormat("{0:x2}", b);
+            return hex.ToString();
+        }
+        
+        public static byte[] StringToByteArray(string hex)
+        {
+            return Enumerable.Range(0, hex.Length)
+                .Where(x => x % 2 == 0)
+                .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+                .ToArray();
         }
 
         private void GenerateKey_OnClick(object sender, RoutedEventArgs e)
