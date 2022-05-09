@@ -168,11 +168,15 @@ namespace DES_KRYPTO_PROJECT
                         holderR[h] = textbytes[h + i * 8 + 4];
                     }
 
+                    byte[] buffholder = holderR;
                     holderR = UseTable(holderR, E);
                     holderR = Auxx.XORBytes(holderR, keybytes);
                     holderR = Sbox(holderR);
+
                     holderR = UseTable(holderR, P);
                     holderR = Auxx.XORBytes(holderR,holderL);
+
+                    holderL = buffholder;
                     for (int h = 0; h < 4; h++)
                     {
                         textbytes[h + i * 8] = holderR[h];
@@ -229,21 +233,17 @@ namespace DES_KRYPTO_PROJECT
                         holderL[h] = textbytes[h + i * 8];
                         holderR[h] = textbytes[h + i * 8 + 4];
                     }
-                    /*
+
+                    byte[] buffholder = holderR;
+
                     holderR = UseTable(holderR, E);
                     holderR = Auxx.XORBytes(holderR, keybytes);
                     holderR = Sbox(holderR);
 
                     holderR = UseTable(holderR, P);
-                    holderR = Auxx.XORBytes(holderR,holderL);
-                    */
-
                     holderR = Auxx.XORBytes(holderR, holderL);
-                    holderR = UseTable(holderR, P);
-
-                    holderR = UseTable(holderR, E);
-                    holderR = Auxx.XORBytes(holderR, keybytes);
-                    holderR = Sbox(holderR);
+                    
+                    holderL = buffholder;
 
                     for (int h = 0; h < 4; h++)
                     {
