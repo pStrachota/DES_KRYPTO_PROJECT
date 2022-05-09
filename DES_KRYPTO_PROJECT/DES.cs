@@ -120,11 +120,9 @@ namespace DES_KRYPTO_PROJECT
             19, 13, 30, 6, 22, 11, 4, 25
         };
 
-        public String Encrypt(String plaintext, String key)
+        public byte[] Encrypt(byte[] textbytes,byte[] keybytes)
         {
             //input
-            byte[] textbytes = Encoding.ASCII.GetBytes(plaintext);
-            byte[] keybytes = StringToByteArray(key);
             
             byte[] holderL = new byte[4];
             byte[] holderR = new byte[4];
@@ -183,14 +181,11 @@ namespace DES_KRYPTO_PROJECT
                 }
             }
 
-            return ByteArrayToString(textbytes);
+            return textbytes;
         }
 
-        public String Decrypt(String plaintext, String key)
+        public byte[] Decrypt(byte[] textbytes, byte[] keybytes)
         {
-            byte[] textbytes = StringToByteArray(plaintext);
-            byte[] keybytes = StringToByteArray(key);
-
             byte[] holderL = new byte[4];
             byte[] holderR = new byte[4];
             bool[] buff = new bool[2];
@@ -234,12 +229,21 @@ namespace DES_KRYPTO_PROJECT
                         holderL[h] = textbytes[h + i * 8];
                         holderR[h] = textbytes[h + i * 8 + 4];
                     }
+                    /*
+                    holderR = UseTable(holderR, E);
+                    holderR = Auxx.XORBytes(holderR, keybytes);
+                    holderR = Sbox(holderR);
+
+                    holderR = UseTable(holderR, P);
+                    holderR = Auxx.XORBytes(holderR,holderL);
+                    */
 
                     holderR = Auxx.XORBytes(holderR, holderL);
                     holderR = UseTable(holderR, P);
-                    holderR = Sbox(holderR);
-                    holderR = Auxx.XORBytes(holderR, keybytes);
+
                     holderR = UseTable(holderR, E);
+                    holderR = Auxx.XORBytes(holderR, keybytes);
+                    holderR = Sbox(holderR);
 
                     for (int h = 0; h < 4; h++)
                     {
@@ -249,7 +253,7 @@ namespace DES_KRYPTO_PROJECT
                 }
             }
 
-            return ByteArrayToString(textbytes);
+            return textbytes;
         }
 
         public static string ByteArrayToString(byte[] ba)
