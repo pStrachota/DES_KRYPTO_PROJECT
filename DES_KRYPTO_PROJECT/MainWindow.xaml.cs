@@ -26,6 +26,7 @@ namespace DES_KRYPTO_PROJECT
         private string _ReadFileExtension;
         private string _LoadFileExtension;
         static Random random = new Random();
+        private bool _fileOrPlainText = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -196,6 +197,7 @@ namespace DES_KRYPTO_PROJECT
         {
             String plaintext = TxtEditorForPlainText.Text;
             String loadedKey = TxtEditorForKey.Text;
+            byte[] bytes = null;
             if (loadedKey.Length < 16)
             {
                 MessageBox.Show("KLUCZ JEST ZA KRÓTKI", "ZŁA DŁUGOŚĆ KLUCZA");
@@ -206,7 +208,17 @@ namespace DES_KRYPTO_PROJECT
             }
             else
             {
-                byte[] bytes = Encoding.ASCII.GetBytes(plaintext);
+
+                if (!_fileOrPlainText)
+                {
+                    bytes = Encoding.ASCII.GetBytes(plaintext);
+                }
+                else
+                {
+                    bytes = StringToByteArray(plaintext);
+                    _fileOrPlainText = false;
+                }
+
                 byte[] key = Encoding.ASCII.GetBytes(loadedKey);
                 DES encryptor = new DES();
                 byte[] cryptogram = encryptor.Encrypt(bytes, key);
@@ -247,6 +259,7 @@ namespace DES_KRYPTO_PROJECT
                 _ReadFileExtension = Path.GetExtension(openFileDialog.FileName);
                 _LoadFileExtension = Path.GetExtension(openFileDialog.FileName);
                 TxtEditorForPlainText.Text = ByteArrayToString(fileToEncrypt);
+                _fileOrPlainText = true;
             }
         }
 
