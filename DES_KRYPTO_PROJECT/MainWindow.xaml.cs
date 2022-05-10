@@ -32,14 +32,15 @@ namespace DES_KRYPTO_PROJECT
             dirs.Add(new StringBuilder().Append("TekstyJawneKRYPTO"));
             dirs.Add(new StringBuilder().Append("TekstyZaszyfrowaneKRYPTO"));
 
-            foreach(StringBuilder dir in dirs)
+            foreach (StringBuilder dir in dirs)
             {
                 StringBuilder dirsToCheck = new StringBuilder();
                 dirsToCheck.Append(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
                 dirsToCheck.Append(Path.DirectorySeparatorChar);
                 dirsToCheck.Append(dir);
 
-                if(!Directory.Exists(dirsToCheck.ToString())) {
+                if (!Directory.Exists(dirsToCheck.ToString()))
+                {
                     Directory.CreateDirectory(dirsToCheck.ToString());
                 }
             }
@@ -89,6 +90,14 @@ namespace DES_KRYPTO_PROJECT
 
             if (saveFileDialog.ShowDialog() == true)
                 File.WriteAllText(saveFileDialog.FileName, TxtEditorForPlainText.Text);
+            if (File.Exists(saveFileDialog.FileName))
+            {
+                MessageBox.Show("zapisano do pliku: " + saveFileDialog.FileName, "Zapisano");
+            }
+            else
+            {
+                MessageBox.Show("nie udało się zapisać pliku: " + saveFileDialog.FileName);
+            }
         }
 
         private void OpenFileWithCryptogramButtonWithDialog_Click(object sender, RoutedEventArgs e)
@@ -106,9 +115,16 @@ namespace DES_KRYPTO_PROJECT
         {
             SaveFileDialog saveFileDialog = (SaveFileDialog)BuildSaveFileDialog(true, "TekstyZaszyfrowaneKRYPTO");
             saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-
             if (saveFileDialog.ShowDialog() == true)
-                File.WriteAllText(saveFileDialog.FileName, SaveFileWithCryptogramText.Text);
+                File.WriteAllText(saveFileDialog.FileName, TxtEditorForCryptogram.Text);
+            if (File.Exists(saveFileDialog.FileName))
+            {
+                MessageBox.Show("zapisano do pliku: " + saveFileDialog.FileName);
+            }
+            else
+            {
+                MessageBox.Show("nie udało się zapisać pliku: " + saveFileDialog.FileName);
+            }
         }
 
         private void OpenFileWithKeyValueButtonWithDialog_Click(object sender, RoutedEventArgs e)
@@ -129,6 +145,15 @@ namespace DES_KRYPTO_PROJECT
 
             if (saveFileDialog.ShowDialog() == true)
                 File.WriteAllText(saveFileDialog.FileName, TxtEditorForKey.Text);
+
+            if (File.Exists(saveFileDialog.FileName))
+            {
+                MessageBox.Show("zapisano do pliku: " + saveFileDialog.FileName);
+            }
+            else
+            {
+                MessageBox.Show("nie udało się zapisać pliku: " + saveFileDialog.FileName);
+            }
         }
 
         private void ShowKey_Click(object sender, RoutedEventArgs e)
@@ -151,7 +176,7 @@ namespace DES_KRYPTO_PROJECT
                 TxtEditorKeyValueHidden.Visibility = Visibility.Hidden;
             }
         }
-        
+
         static Random random = new Random();
         public static string GetRandomHexNumber(int digits)
         {
@@ -162,7 +187,7 @@ namespace DES_KRYPTO_PROJECT
                 return result;
             return result + random.Next(16).ToString("X");
         }
-        
+
         private void Encrypt(object sender, RoutedEventArgs e)
         {
             String plaintext = TxtEditorForPlainText.Text;
@@ -184,21 +209,21 @@ namespace DES_KRYPTO_PROJECT
                 TxtEditorForCryptogram.Text = ByteArrayToString(cryptogram);
             }
         }
-        
+
         private void Decrypt(object sender, RoutedEventArgs e)
         {
             String loadedKey = TxtEditorForKey.Text;
             String plaintext = TxtEditorForCryptogram.Text;
-            
+
             byte[] bytes = Encoding.ASCII.GetBytes(plaintext);
             byte[] key = Encoding.ASCII.GetBytes(loadedKey);
-            
+
             DES des = new DES();
             byte[] decode = des.Decrypt(bytes, key);
             String kod = Encoding.ASCII.GetString(decode);
             TxtEditorForPlainText.Text = kod;
         }
-        
+
         public static string ByteArrayToString(byte[] ba)
         {
             StringBuilder hex = new StringBuilder(ba.Length * 2);
@@ -206,7 +231,7 @@ namespace DES_KRYPTO_PROJECT
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
         }
-        
+
         public static byte[] StringToByteArray(string hex)
         {
             return Enumerable.Range(0, hex.Length)
@@ -221,7 +246,7 @@ namespace DES_KRYPTO_PROJECT
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             String keyGenerated = new string(Enumerable.Repeat(chars, 16)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
-            
+
             TxtEditorForKey.Text = GetRandomHexNumber(16);
         }
     }
