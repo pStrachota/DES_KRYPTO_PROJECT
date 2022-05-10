@@ -151,7 +151,7 @@ namespace DES_KRYPTO_PROJECT
             
             byte[] holderL = new byte[4];
             byte[] holderR = new byte[4];
-            bool[] buff = new bool[2];
+            byte[] tmp = new byte[8];
             //expanding bitarrays to fit (56 bits for key,64 bit blocks for plaintext
             if ((textbytes.Length & 7) != 0)
             {
@@ -162,8 +162,7 @@ namespace DES_KRYPTO_PROJECT
             int blockcount = textbytes.Length / 8;
 
             byte[][] subkeys = generatesubkeys(keybytes);
-            textbytes = UseTable(textbytes, IP);
-
+            
             for (int stage = 1; stage <= 16; stage++)
             {
                 //get subkey
@@ -172,6 +171,12 @@ namespace DES_KRYPTO_PROJECT
                 //podział bloku na połowy
                 for (int blocknum = 0; blocknum < blockcount; blocknum++)
                 {
+                    if(stage == 1)
+                    {
+                        Array.Copy(textbytes, blocknum*8, tmp, 0, 8);
+                        tmp = UseTable(tmp, IP);
+                        Array.Copy(tmp,0,textbytes, blocknum*8, 8);
+                    }
                     //wczytaj blok
                     for (int pointer = 0; pointer < 4; pointer++)
                     {
@@ -201,13 +206,20 @@ namespace DES_KRYPTO_PROJECT
                         {
                             textbytes[pointer + blocknum * 8] = holderR[pointer];
                             textbytes[pointer + blocknum * 8 + 4] = holderL[pointer];
+
                         }
+                    }
+                    if(stage==16)
+                    {
+                        Array.Copy(textbytes, blocknum * 8, tmp, 0, 8);
+                        tmp = UseTable(tmp, IP2);
+                        Array.Copy(tmp, 0, textbytes, blocknum * 8, 8);
                     }
                 }
 
             }
 
-            textbytes = UseTable(textbytes, IP2);
+            
 
             return textbytes;
         }
@@ -216,7 +228,7 @@ namespace DES_KRYPTO_PROJECT
         {
             byte[] holderL = new byte[4];
             byte[] holderR = new byte[4];
-            bool[] buff = new bool[2];
+            byte[] tmp = new byte[8];
             //expanding bitarrays to fit (56 bits for key,64 bit blocks for plaintext
             if ((textbytes.Length & 7) != 0)
             {
@@ -227,7 +239,6 @@ namespace DES_KRYPTO_PROJECT
             int blockcount = textbytes.Length / 8;
 
             byte[][] subkeys = generatesubkeys(keybytes);
-            textbytes = UseTable(textbytes, IP);
 
             for (int stage = 1; stage <= 16; stage++)
             {
@@ -237,6 +248,12 @@ namespace DES_KRYPTO_PROJECT
                 //podział bloku na połowy
                 for (int blocknum = 0; blocknum < blockcount; blocknum++)
                 {
+                    if (stage == 1)
+                    {
+                        Array.Copy(textbytes, blocknum * 8, tmp, 0, 8);
+                        tmp = UseTable(tmp, IP);
+                        Array.Copy(tmp, 0, textbytes, blocknum * 8, 8);
+                    }
                     for (int pointer = 0; pointer < 4; pointer++)
                     {
                        holderL[pointer] = textbytes[pointer + blocknum * 8];
@@ -268,9 +285,14 @@ namespace DES_KRYPTO_PROJECT
                             textbytes[pointer + blocknum * 8 + 4] = holderL[pointer];
                         }
                     }
+                    if (stage == 16)
+                    {
+                        Array.Copy(textbytes, blocknum * 8, tmp, 0, 8);
+                        tmp = UseTable(tmp, IP2);
+                        Array.Copy(tmp, 0, textbytes, blocknum * 8, 8);
+                    }
                 }
             }
-            textbytes = UseTable(textbytes, IP2);
             return textbytes;
         }
 

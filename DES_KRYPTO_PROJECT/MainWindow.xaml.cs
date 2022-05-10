@@ -330,10 +330,10 @@ namespace DES_KRYPTO_PROJECT
         {
             Random random = new Random();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            String keyGenerated = new string(Enumerable.Repeat(chars, 16)
+            String keyGenerated = new string(Enumerable.Repeat(chars, 8)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
 
-            TxtEditorForKey.Text = GetRandomHexNumber(16);
+            TxtEditorForKey.Text = keyGenerated;
         }
     }
 }
