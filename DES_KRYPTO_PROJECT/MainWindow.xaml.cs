@@ -34,6 +34,8 @@ namespace DES_KRYPTO_PROJECT
             dirs.Add(new StringBuilder().Append("TekstyKluczaKRYPTO"));
             dirs.Add(new StringBuilder().Append("TekstyJawneKRYPTO"));
             dirs.Add(new StringBuilder().Append("TekstyZaszyfrowaneKRYPTO"));
+            dirs.Add(new StringBuilder().Append("OdszyfrowanePliki"));
+            dirs.Add(new StringBuilder().Append("ZaszyfrowanePliki"));
 
             foreach (StringBuilder dir in dirs)
             {
