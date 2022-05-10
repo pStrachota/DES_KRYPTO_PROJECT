@@ -23,6 +23,9 @@ namespace DES_KRYPTO_PROJECT
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string _ReadFileExtension;
+        private string _LoadFileExtension;
+        static Random random = new Random();
         public MainWindow()
         {
             InitializeComponent();
@@ -177,7 +180,6 @@ namespace DES_KRYPTO_PROJECT
             }
         }
 
-        static Random random = new Random();
         public static string GetRandomHexNumber(int digits)
         {
             byte[] buffer = new byte[digits / 2];
@@ -232,12 +234,81 @@ namespace DES_KRYPTO_PROJECT
             return hex.ToString();
         }
 
+        private void encryptFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new();
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                byte[] fileToEncrypt = File.ReadAllBytes(openFileDialog.FileName);
+                _ReadFileExtension = Path.GetExtension(openFileDialog.FileName);
+                _LoadFileExtension = Path.GetExtension(openFileDialog.FileName);
+                TxtEditorForPlainText.Text = ByteArrayToString(fileToEncrypt);
+            }
+        }
+
+        private void RebuildFile_Click(object sender, RoutedEventArgs e)
+        {
+
+            SaveFileDialog saveFileDialog = (SaveFileDialog)BuildSaveFileDialog(true, "OdszyfrowanePliki");
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                byte[] byteToSave = StringToByteArray(TxtEditorForPlainText.Text);
+                File.WriteAllBytes(saveFileDialog.FileName + _ReadFileExtension, byteToSave);
+
+                if (File.Exists(saveFileDialog.FileName + _ReadFileExtension))
+                {
+                    MessageBox.Show("zapisano do pliku: " + saveFileDialog.FileName + _ReadFileExtension);
+                }
+                else
+                {
+                    MessageBox.Show("nie udało się zapisać pliku: " + saveFileDialog.FileName + _ReadFileExtension);
+                }
+
+            }
+        }
+
+        private void OpenFileWithCryptogramButtonWithDialog1_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog OpenFileDialog = (OpenFileDialog)BuildSaveFileDialog(false, "ZaszyfrowanePliki");
+
+            if (OpenFileDialog.ShowDialog() == true)
+            {
+                byte[] byteToLoad = File.ReadAllBytes(OpenFileDialog.FileName);
+                _LoadFileExtension = Path.GetExtension(OpenFileDialog.FileName);
+                TxtEditorForCryptogram.Text = ByteArrayToString(byteToLoad);
+
+            }
+        }
         public static byte[] StringToByteArray(string hex)
         {
             return Enumerable.Range(0, hex.Length)
                 .Where(x => x % 2 == 0)
                 .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
                 .ToArray();
+        }
+
+        private void SaveFileWithPlainTextButtonWithDialog_Copy1_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = (SaveFileDialog)BuildSaveFileDialog(true, "ZaszyfrowanePliki");
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                byte[] byteToSave = StringToByteArray(TxtEditorForCryptogram.Text);
+                File.WriteAllBytes(saveFileDialog.FileName + _LoadFileExtension, byteToSave);
+
+                if (File.Exists(saveFileDialog.FileName + _LoadFileExtension))
+                {
+                    MessageBox.Show("zapisano do pliku: " + saveFileDialog.FileName + _LoadFileExtension);
+                }
+                else
+                {
+                    MessageBox.Show("nie udało się zapisać pliku: " + saveFileDialog.FileName + _LoadFileExtension);
+                }
+
+            }
         }
 
         private void GenerateKey_OnClick(object sender, RoutedEventArgs e)
