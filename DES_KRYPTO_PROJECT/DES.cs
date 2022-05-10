@@ -227,19 +227,20 @@ namespace DES_KRYPTO_PROJECT
             int blockcount = textbytes.Length / 8;
 
             byte[][] subkeys = generatesubkeys(keybytes);
+            textbytes = UseTable(textbytes, IP);
 
             for (int stage = 1; stage <= 16; stage++)
             {
                 //generate subkey
-                keybytes = subkeys[15 - stage + 1];
+                keybytes = subkeys[16 - stage];
 
                 //podział bloku na połowy
                 for (int blocknum = 0; blocknum < blockcount; blocknum++)
                 {
                     for (int pointer = 0; pointer < 4; pointer++)
                     {
-                        holderL[pointer] = textbytes[pointer + blocknum * 8];
-                        holderR[pointer] = textbytes[pointer + blocknum * 8 + 4];
+                       holderL[pointer] = textbytes[pointer + blocknum * 8];
+                       holderR[pointer] = textbytes[pointer + blocknum * 8 + 4];
                     }
 
 
@@ -269,7 +270,7 @@ namespace DES_KRYPTO_PROJECT
                     }
                 }
             }
-
+            textbytes = UseTable(textbytes, IP2);
             return textbytes;
         }
 
