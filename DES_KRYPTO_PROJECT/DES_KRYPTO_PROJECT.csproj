@@ -9,7 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="des3.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Paomedia-Small-N-Flat-Lock.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="des3.png" />
   </ItemGroup>
 
 </Project>
