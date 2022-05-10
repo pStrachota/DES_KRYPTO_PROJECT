@@ -198,11 +198,11 @@ namespace DES_KRYPTO_PROJECT
             String plaintext = TxtEditorForPlainText.Text;
             String loadedKey = TxtEditorForKey.Text;
             byte[] bytes = null;
-            if (loadedKey.Length < 16)
+            if (loadedKey.Length < 8)
             {
                 MessageBox.Show("KLUCZ JEST ZA KRÓTKI", "ZŁA DŁUGOŚĆ KLUCZA");
             }
-            else if (loadedKey.Length > 16)
+            else if (loadedKey.Length > 8)
             {
                 MessageBox.Show("KLUCZ JEST ZA DŁUGI", "ZŁA DŁUGOŚĆ KLUCZA");
             }
@@ -231,7 +231,7 @@ namespace DES_KRYPTO_PROJECT
             String loadedKey = TxtEditorForKey.Text;
             String plaintext = TxtEditorForCryptogram.Text;
 
-            byte[] bytes = Encoding.ASCII.GetBytes(plaintext);
+            byte[] bytes = StringToByteArray(plaintext);
             byte[] key = Encoding.ASCII.GetBytes(loadedKey);
 
             DES des = new DES();
