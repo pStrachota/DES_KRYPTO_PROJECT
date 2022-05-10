@@ -119,6 +119,31 @@ namespace DES_KRYPTO_PROJECT
             2, 8, 24, 14, 32, 27, 3, 9,
             19, 13, 30, 6, 22, 11, 4, 25
         };
+        private static readonly int[] IP = new int[]
+        {
+            58,  50,  42,  34,  26,  18,  10,  2,
+            60,  52,  44,  36,  28,  20,  12,  4,
+            62,  54,  46,  38,  30,  22,  14,  6,
+            64,  56,  48,  40,  32,  24,  16,  8,
+            57,  49,  41,  33,  25,  17,  9,   1,
+            59,  51,  43,  35,  27,  19,  11,  3,
+            61,  53,  45,  37,  29,  21,  13,  5,
+            63,  55,  47,  39,  31,  23,  15,  7
+
+        };
+        private static int[] IP2 = new int[]
+        {
+            40,  8,   48,  16,  56,  24,  64,  32,
+            39,  7,   47,  15,  55,  23,  63,  31,
+            38,  6,   46,  14,  54,  22,  62,  30,
+            37,  5,   45,  13,  53,  21,  61,  29,
+            36,  4,   44,  12,  52,  20,  60,  28,
+            35,  3,   43,  11,  51,  19,  59,  27,
+            34,  2,   42,  10,  50,  18,  58,  26,
+            33,  1,   41,   9,  49,  17,  57,  25
+
+        };
+
 
         public byte[] Encrypt(byte[] textbytes,byte[] keybytes)
         {
@@ -136,54 +161,53 @@ namespace DES_KRYPTO_PROJECT
             }
             int blockcount = textbytes.Length / 8;
 
-            keybytes = UseTable(keybytes, PC1); //to wycina 56 bitów i skraca keybytes wiec nie ma potrzeby tego wcześniej obciniać
+            byte[][] subkeys = generatesubkeys(keybytes);
+            textbytes = UseTable(textbytes, IP);
 
-            byte[] keybytesC = Auxx.selectBits(keybytes, 0, 28);
-            byte[] keybytesD = Auxx.selectBits(keybytes, 28, 28);
-
-            for (int j = 1; j <= 16; j++)
+            for (int stage = 1; stage <= 16; stage++)
             {
-                //generate subkey
-                if (j == 1 || j == 2 || j == 9 || j == 16)
-                {
-                    keybytesC = Auxx.rotateLeft(keybytesC,28,1);
-                    keybytesD = Auxx.rotateLeft(keybytesD,28,1);
-
-                    keybytes = UseTable(GlueKey(keybytesC,keybytesD),PC2);
-                }
-                else
-                {
-                    keybytesC = Auxx.rotateLeft(keybytesC, 28, 2);
-                    keybytesD = Auxx.rotateLeft(keybytesD, 28, 2);
-
-                    keybytes = UseTable(GlueKey(keybytesC, keybytesD), PC2);
-                }
+                //get subkey
+                keybytes = subkeys[stage - 1];
 
                 //podział bloku na połowy
-                for (int i = 0; i < blockcount; i++)
+                for (int blocknum = 0; blocknum < blockcount; blocknum++)
                 {
-                    for (int h = 0; h < 4; h++)
+                    //wczytaj blok
+                    for (int pointer = 0; pointer < 4; pointer++)
                     {
-                        holderL[h] = textbytes[h + i * 8];
-                        holderR[h] = textbytes[h + i * 8 + 4];
+                        holderL[pointer] = textbytes[pointer + blocknum * 8];
+                        holderR[pointer] = textbytes[pointer + blocknum * 8 + 4];
                     }
 
                     byte[] buffholder = holderR;
+                    //funkcja F
                     holderR = UseTable(holderR, E);
                     holderR = Auxx.XORBytes(holderR, keybytes);
                     holderR = Sbox(holderR);
-
                     holderR = UseTable(holderR, P);
+                    //koniec F
+
+                    //xorowanie
                     holderR = Auxx.XORBytes(holderR,holderL);
 
                     holderL = buffholder;
-                    for (int h = 0; h < 4; h++)
+
+                    //odłoz blok
+                    for (int pointer = 0; pointer < 4; pointer++)
                     {
-                        textbytes[h + i * 8] = holderR[h];
-                        textbytes[h + i * 8 + 4] = holderL[h];
+                        textbytes[pointer + blocknum * 8] = holderL[pointer];
+                        textbytes[pointer + blocknum * 8 + 4] = holderR[pointer];
+                        if(stage==16)
+                        {
+                            textbytes[pointer + blocknum * 8] = holderR[pointer];
+                            textbytes[pointer + blocknum * 8 + 4] = holderL[pointer];
+                        }
                     }
                 }
+
             }
+
+            textbytes = UseTable(textbytes, IP2);
 
             return textbytes;
         }
@@ -202,53 +226,46 @@ namespace DES_KRYPTO_PROJECT
             }
             int blockcount = textbytes.Length / 8;
 
-            keybytes = UseTable(keybytes, PC1); //to wycina 56 bitów i skraca keybytes wiec nie ma potrzeby tego wcześniej obciniać
+            byte[][] subkeys = generatesubkeys(keybytes);
 
-            byte[] keybytesC = Auxx.selectBits(keybytes, 0, 28);
-            byte[] keybytesD = Auxx.selectBits(keybytes, 28, 28);
-
-            for (int j = 1; j <= 16; j++)
+            for (int stage = 1; stage <= 16; stage++)
             {
                 //generate subkey
-                if (j == 1 || j == 2 || j == 9 || j == 16)
-                {
-                    keybytesC = Auxx.rotateRight(keybytesC, 28, 1);
-                    keybytesD = Auxx.rotateRight(keybytesD, 28, 1);
-
-                    keybytes = UseTable(GlueKey(keybytesC, keybytesD), PC2);
-                }
-                else
-                {
-                    keybytesC = Auxx.rotateRight(keybytesC, 28, 2);
-                    keybytesD = Auxx.rotateRight(keybytesD, 28, 2);
-
-                    keybytes = UseTable(GlueKey(keybytesC, keybytesD), PC2);
-                }
+                keybytes = subkeys[15 - stage + 1];
 
                 //podział bloku na połowy
-                for (int i = 0; i < blockcount; i++)
+                for (int blocknum = 0; blocknum < blockcount; blocknum++)
                 {
-                    for (int h = 0; h < 4; h++)
+                    for (int pointer = 0; pointer < 4; pointer++)
                     {
-                        holderL[h] = textbytes[h + i * 8];
-                        holderR[h] = textbytes[h + i * 8 + 4];
+                        holderL[pointer] = textbytes[pointer + blocknum * 8];
+                        holderR[pointer] = textbytes[pointer + blocknum * 8 + 4];
                     }
 
-                    byte[] buffholder = holderR;
 
+                    byte[] buffholder = holderR;
+                    //funkcja F
                     holderR = UseTable(holderR, E);
                     holderR = Auxx.XORBytes(holderR, keybytes);
                     holderR = Sbox(holderR);
-
                     holderR = UseTable(holderR, P);
+                    //koniec F
+
+                    //xorowanie
                     holderR = Auxx.XORBytes(holderR, holderL);
-                    
+
                     holderL = buffholder;
 
-                    for (int h = 0; h < 4; h++)
+                    //odłoz blok
+                    for (int pointer = 0; pointer < 4; pointer++)
                     {
-                        textbytes[h + i * 8] = holderR[h];
-                        textbytes[h + i * 8 + 4] = holderL[h];
+                        textbytes[pointer + blocknum * 8] = holderL[pointer];
+                        textbytes[pointer + blocknum * 8 + 4] = holderR[pointer];
+                        if (stage == 16)
+                        {
+                            textbytes[pointer + blocknum * 8] = holderR[pointer];
+                            textbytes[pointer + blocknum * 8 + 4] = holderL[pointer];
+                        }
                     }
                 }
             }
@@ -290,13 +307,15 @@ namespace DES_KRYPTO_PROJECT
             for (int i = 0; i < 3; i++)
             {
                 result[i] = arrC[i];
-                result[i + 4] = arrD[i];
             }
             for(int i = 0; i < 4; i++)
             {
                 int val = Auxx.getBitAt(arrC, 24 + i); //24-27
                 Auxx.setBitAt(result, 24 + i, val);
-                val = Auxx.getBitAt(arrD, i); // 0-3
+            }
+            for(int i = 0; i < 28;i++)
+            {
+                int val = Auxx.getBitAt(arrD, i);
                 Auxx.setBitAt(result, 28 + i, val);
             }
             return result;
@@ -318,19 +337,20 @@ namespace DES_KRYPTO_PROJECT
             //5. użyj 2 zmiennych aby stworzyć kompletny bit z 2 zwróconych
             for(int section = 0;section<8;section++)
             {
-                row = Auxx.getBitAt(input, section*6) + Auxx.getBitAt(input,section*6+5)>>1;
+                row = Auxx.getBitAt(input, section * 6)<<1;
+                row += Auxx.getBitAt(input,section*6+5);
                 col = 0;
                 for(int colbit = 0;colbit<4;colbit++)
                 {
-                    col = Auxx.getBitAt(input, section*6+colbit) >> colbit;
+                    col += Auxx.getBitAt(input, section*6+colbit+1) << 3-colbit;
                 }
                 // czy parzysta aka perwszy bit jest równy 0 (jak jest nieparzysta to MUSI by 1)
                 halfofbyte = (byte)Sboxpicker(col, row, section); //4 bity (czy jak przesunę o 4 przy następnych włożeniu to będzie prawidłowo?)
                 if ((section & 1) == 0)
                 {
-                    output[section/2] = (byte)(halfofbyte >> 4);
+                    output[section/2] += (byte)(halfofbyte << 4);
                 } else {
-                    output[section/2] = halfofbyte;
+                    output[section/2] += halfofbyte;
                 }
             }
             return output;
@@ -370,8 +390,38 @@ namespace DES_KRYPTO_PROJECT
             return result;
         }
 
+        public byte[][] generatesubkeys(byte[] keybytes)
+        {
+            byte[][] subkeyarray = new byte[16][];
+            keybytes = UseTable(keybytes, PC1); //to wycina 56 bitów i skraca keybytes wiec nie ma potrzeby tego wcześniej obciniać
+
+            byte[] keybytesC = Auxx.selectBits(keybytes, 0, 28);
+            byte[] keybytesD = Auxx.selectBits(keybytes, 28, 28);
+            for (int i = 1; i <= 16; i++)
+            {
+                if (i == 1 || i == 2 || i == 9 || i == 16)
+                {
+                    keybytesC = Auxx.rotateLeft(keybytesC, 28, 1);
+                    keybytesD = Auxx.rotateLeft(keybytesD, 28, 1);
+
+                    keybytes = UseTable(GlueKey(keybytesC, keybytesD), PC2);
+                    subkeyarray[i-1] = keybytes;
+                }
+                else
+                {
+                    keybytesC = Auxx.rotateLeft(keybytesC, 28, 2);
+                    keybytesD = Auxx.rotateLeft(keybytesD, 28, 2);
+
+                    keybytes = UseTable(GlueKey(keybytesC, keybytesD), PC2);
+                    subkeyarray[i-1] = keybytes;
+                }
+            }
+            return subkeyarray;
+        }
+
         public static String Test()
         {
+
             byte x,y;
             x = 1;
             y = 3;
