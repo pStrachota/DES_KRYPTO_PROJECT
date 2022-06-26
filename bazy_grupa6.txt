@@ -1,6 +1,0 @@
-wyswietl daty wydania ksiazek, ktorych tytuly i nazwy wydawnictwa maja te sama dlugosc. Wyniki posortuj wedlug liczby stron w porzadku rosnacym
-wyswietl nazwy gatunkow ksiazek, ktore zostaly wydane w sobote. Zastosuj alias "gatunek
-wyswietl imiona i nazwiska autorow, ktorzy nie wydali zadnej ksiazki.
-dla ksiazki wyswietl jej tytul oraz date pierwszego wypozyczenia jej dowolnego egzemplarza. Uwzglednij tylko te ksiazki dle ktorych wartosc ta jest pozniejsza niz 30 czerwca 2020
-wyswietl imiona i nazwiska czytelnikow, ktorzy dokonali najwiekszej liczby wypozyczen
-dla kazedego autora wyswietl jego imie i nazwisko oraz tytuly ksiazek ktor wydano najwczesniej
