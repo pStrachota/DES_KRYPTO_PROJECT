@@ -1,13 +1,5 @@
 <div id="top"></div>
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -33,7 +25,6 @@
   <ol>
     <li><a href="#about-the-project">About the project</a></li>
     <li><a href="#built-with">Built With</a></li>
-    <li><a href="#technological-construction-used">Technological construction used</a></li>
     <li><a href="#some-screens-from-project">Some screens from project</a></li>
     <li><a href="#license">License</a></li>
   </ol>
@@ -43,7 +34,13 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
+As stated above this task was create for cryptography class. We were randomly 
+assigned DES from many other both symetric and asymetric algorithms. Of course main function of
+code was to encrypt and decrypt user input and text from files, given particular key, but this desktop app
+can also encrypt/decrypt non text files - *open file to encryption* button turn all type of files to hex, 
+that later can be used for encryption. Similarly *recover encrypted file* button uses loaded hex to create
+file (user don't have to remember extension - it's saved automatically). File and text decryption works 
+accordingly.
 
 
 
@@ -97,24 +94,15 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-
-
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/pStrachota/CONCURRENT_PROGRAMMING_PROJECT.svg?style=for-the-badge
-[contributors-url]: https://github.com/pStrachota/CONCURRENT_PROGRAMMING_PROJECT/graphs/contributors
+[contributors-url]: https://github.com/pStrachota/DES_KRYPTO_PROJECT/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/pStrachota/CONCURRENT_PROGRAMMING_PROJECT.svg?style=for-the-badge
-[forks-url]: https://github.com/pStrachota/CONCURRENT_PROGRAMMING_PROJECT/network/members
+[forks-url]: https://github.com/pStrachota/CONCURRENT_PROGRADES_KRYPTO_PROJECTMMING_PROJECT/network/members
 [stars-shield]: https://img.shields.io/github/stars/pStrachota/CONCURRENT_PROGRAMMING_PROJECT.svg?style=for-the-badge
-[stars-url]: https://github.com/pStrachota/CONCURRENT_PROGRAMMING_PROJECT/stargazers
+[stars-url]: https://github.com/pStrachota/DES_KRYPTO_PROJECT/stargazers
 [issues-shield]: https://img.shields.io/github/issues/pStrachota/CONCURRENT_PROGRAMMING_PROJECT.svg?style=for-the-badge
-[issues-url]: https://github.com/pStrachota/CONCURRENT_PROGRAMMING_PROJECT/issues
+[issues-url]: https://github.com/pStrachota/DES_KRYPTO_PROJECT/issues
 [license-shield]: https://img.shields.io/github/license/pStrachota/CONCURRENT_PROGRAMMING_PROJECT.svg?style=for-the-badge
-[license-url]: https://github.com/pStrachota/CONCURRENT_PROGRAMMING_PROJECT/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: images/screenshot.png
+[license-url]: https://github.com/pStrachota/DES_KRYPTO_PROJECT/blob/master/LICENSE.txt
+
 
