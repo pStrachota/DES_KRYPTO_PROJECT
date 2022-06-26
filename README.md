@@ -94,15 +94,15 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-[contributors-shield]: https://img.shields.io/github/contributors/pStrachota/CONCURRENT_PROGRAMMING_PROJECT.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/pStrachota/DES_KRYPTO_PROJECT.svg?style=for-the-badge
 [contributors-url]: https://github.com/pStrachota/DES_KRYPTO_PROJECT/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/pStrachota/CONCURRENT_PROGRAMMING_PROJECT.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/pStrachota/DES_KRYPTO_PROJECT.svg?style=for-the-badge
 [forks-url]: https://github.com/pStrachota/CONCURRENT_PROGRADES_KRYPTO_PROJECTMMING_PROJECT/network/members
-[stars-shield]: https://img.shields.io/github/stars/pStrachota/CONCURRENT_PROGRAMMING_PROJECT.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/pStrachota/DES_KRYPTO_PROJECT.svg?style=for-the-badge
 [stars-url]: https://github.com/pStrachota/DES_KRYPTO_PROJECT/stargazers
-[issues-shield]: https://img.shields.io/github/issues/pStrachota/CONCURRENT_PROGRAMMING_PROJECT.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/pStrachota/DES_KRYPTO_PROJECT.svg?style=for-the-badge
 [issues-url]: https://github.com/pStrachota/DES_KRYPTO_PROJECT/issues
-[license-shield]: https://img.shields.io/github/license/pStrachota/CONCURRENT_PROGRAMMING_PROJECT.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/pStrachota/DES_KRYPTO_PROJECT.svg?style=for-the-badge
 [license-url]: https://github.com/pStrachota/DES_KRYPTO_PROJECT/blob/master/LICENSE.txt
 
 
